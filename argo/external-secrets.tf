@@ -47,20 +47,23 @@ resource "helm_release" "external_secrets_operator" {
   
 }
 
-resource "kubernetes_manifest" "gcp_secrets" {
-  depends_on = [ helm_release.external_secrets_operator ]
-  manifest = {
-    apiVersion = "external-secrets.io/v1beta1"
-    kind       = "ClusterSecretStore"
-    metadata = {
-      name = "gcp-secrets"
-    }
-    spec = {
-      provider = {
-        gcpsm = {
-          projectID = var.project_id
-        }
-      }
-    }
-  }
-}
+# Needs to run after installing secrets operator but will fail during plan stage
+# https://github.com/hashicorp/terraform-provider-kubernetes/issues/1782
+# Apply manually
+# resource "kubernetes_manifest" "gcp_secrets" {
+#   depends_on = [ helm_release.external_secrets_operator ]
+#   manifest = {
+#     apiVersion = "external-secrets.io/v1beta1"
+#     kind       = "ClusterSecretStore"
+#     metadata = {
+#       name = "gcp-secrets"
+#     }
+#     spec = {
+#       provider = {
+#         gcpsm = {
+#           projectID = var.project_id
+#         }
+#       }
+#     }
+#   }
+# }
