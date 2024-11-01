@@ -5,6 +5,13 @@ resource "google_compute_address" "ingress" {
   region  = var.region
 }
 
+resource "kubernetes_namespace_v1" "app_namespace" {
+  count = var.create_app_namespace ? 1 : 0
+  metadata {
+    name = var.app_namespace
+  }
+}
+
 
 module "nginx-controller" {
   count  = var.deploy_nginx ? 1 : 0

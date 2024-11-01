@@ -21,3 +21,13 @@ variable "region" {
   type    = string
   default = "europe-west4"
 }
+
+variable "create_app_namespace" {
+  type    = bool
+  default = false
+}
+
+variable "app_namespace" {
+  type    = string
+  default = "app-namespace"
+}
