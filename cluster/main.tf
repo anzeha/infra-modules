@@ -1,6 +1,6 @@
 locals {
   node_pool_name = "${var.resource_prefix}-${var.node_pool_name}-${var.env}"
-  cluster_name = "${var.resource_prefix}-${var.cluster_name}-${var.env}"
+  cluster_name   = "${var.resource_prefix}-${var.cluster_name}-${var.env}"
 }
 
 module "gke" {
@@ -31,12 +31,12 @@ module "gke" {
     {
       name         = local.node_pool_name
       machine_type = var.machine_type
-      disk_size_gb   = var.machine_disk_size
-      spot           = false 
+      disk_size_gb = var.machine_disk_size
+      spot         = false
     },
-  ] : [{
-     name         = local.node_pool_name
-      machine_type = var.machine_type
+    ] : [{
+      name           = local.node_pool_name
+      machine_type   = var.machine_type
       node_locations = "${var.zones[0]}"
       disk_size_gb   = var.machine_disk_size
       spot           = true # Use spot VMs instead of regular on-demand VMs
@@ -54,7 +54,7 @@ module "gke" {
 
     "${local.node_pool_name}" = {
       default-node-pool = true
-      env = var.env
+      env               = var.env
     }
   }
 
@@ -82,22 +82,22 @@ module "gke_auth" {
 }
 
 resource "google_secret_manager_secret" "gke-cluster-details" {
-  project = var.argocd_project_id
-  secret_id = module.gke.name 
+  project   = var.argocd_project_id
+  secret_id = module.gke.name
   replication {
     auto {
-      
+
     }
   }
 }
 
 resource "google_secret_manager_secret_version" "gke-cluster-details-values" {
   secret = google_secret_manager_secret.gke-cluster-details.id
-  secret_data =  jsonencode(
+  secret_data = jsonencode(
     {
-      "caData": module.gke.ca_certificate,
-      "host": "https://${module.gke.endpoint}",
-      "clusterName": module.gke.name
+      "caData" : module.gke.ca_certificate,
+      "host" : "https://${module.gke.endpoint}",
+      "clusterName" : module.gke.name
     }
   )
 }
