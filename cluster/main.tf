@@ -82,8 +82,8 @@ module "gke_auth" {
 }
 
 resource "google_secret_manager_secret" "gke-cluster-details" {
-  project = var.argocd_project_id            # Store the secret in Argo Project
-  secret_id = "testsecret123"      # The cluster name should be joined to ArgoCD
+  project = var.argocd_project_id
+  secret_id = module.gke.name 
   replication {
     auto {
       
@@ -95,9 +95,9 @@ resource "google_secret_manager_secret_version" "gke-cluster-details-values" {
   secret = google_secret_manager_secret.gke-cluster-details.id
   secret_data =  jsonencode(
     {
-      "caData": module.gke.ca_certificate
-      "host": "https://${module.gke.endpoint}",                    # The cluster endpoint (Address) that should be joined to ArgoCD
-      "clusterName": module.gke.name                               # The cluster project that should be joined to ArgoCD
+      "caData": module.gke.ca_certificate,
+      "host": "https://${module.gke.endpoint}",
+      "clusterName": module.gke.name
     }
   )
 }
