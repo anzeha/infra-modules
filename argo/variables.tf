@@ -61,3 +61,8 @@ variable "external_secrets_ks_sa_name" {
   type    = string
   default = "external-secrets"
 }
+
+variable "argo_apps_values" {
+  type    = string
+  default = ""
+}
