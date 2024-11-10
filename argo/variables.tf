@@ -57,6 +57,12 @@ variable "external_secrets_gcp_sa_name" {
   default = "external-secrets-sa"
 }
 
+variable "argocd_gcp_sa_name" {
+  type    = string
+  default = "argocd-sa"
+}
+
+
 variable "external_secrets_ks_sa_name" {
   type    = string
   default = "external-secrets"
