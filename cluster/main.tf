@@ -33,6 +33,7 @@ module "gke" {
       machine_type = var.machine_type
       disk_size_gb = var.machine_disk_size
       spot         = false
+      image_type   = "COS_CONTAINERD" 
     },
     ] : [{
       name           = local.node_pool_name
@@ -40,6 +41,7 @@ module "gke" {
       node_locations = "${var.zones[0]}"
       disk_size_gb   = var.machine_disk_size
       spot           = true # Use spot VMs instead of regular on-demand VMs
+      image_type   = "COS_CONTAINERD" 
   }]
 
   node_pools_oauth_scopes = {
