@@ -16,7 +16,7 @@ resource "kubernetes_namespace_v1" "app_namespace" {
 module "nginx-controller" {
   count  = var.deploy_nginx ? 1 : 0
   source = "terraform-iaac/nginx-controller/helm"
-
+  atomic = true
   ip_address = google_compute_address.ingress[0].address
 
 }
