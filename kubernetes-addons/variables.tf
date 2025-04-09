@@ -15,6 +15,7 @@ variable "deploy_nginx" {
 }
 variable "cluster_name" {
   type = string
+  default = "wtf-wtf-wtf"
 }
 
 variable "region" {
