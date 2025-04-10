@@ -1,37 +1,37 @@
-locals {
-  sa_roles = [
-    "roles/container.developer"
-  ]
-  argocd_server_sa = "argocd-server"
-  argocd_application_controller_sa = "argocd-application-controller"
-}
+# locals {
+#   sa_roles = [
+#     "roles/container.developer"
+#   ]
+#   argocd_server_sa = "argocd-server"
+#   argocd_application_controller_sa = "argocd-application-controller"
+# }
 
-# Create argocd google service account
-resource "google_service_account" "argocd_service_account" {
-  account_id   = var.argocd_gcp_sa_name
-  display_name = "Service account for argocd"
-}
+# # Create argocd google service account
+# resource "google_service_account" "argocd_service_account" {
+#   account_id   = var.argocd_gcp_sa_name
+#   display_name = "Service account for argocd"
+# }
 
-resource "google_project_iam_member" "argocd_service_account_members" {
-  for_each = toset(compact(distinct(concat(local.sa_roles))))
-  project  = var.project_id
-  role     = each.value
-  member   = "serviceAccount:${google_service_account.argocd_service_account.email}"
-}
+# resource "google_project_iam_member" "argocd_service_account_members" {
+#   for_each = toset(compact(distinct(concat(local.sa_roles))))
+#   project  = var.project_id
+#   role     = each.value
+#   member   = "serviceAccount:${google_service_account.argocd_service_account.email}"
+# }
 
 
-# Add workload identity user
-resource "google_project_iam_member" "argocd_application_controller_workload_identity_role" {
-  role    = "roles/iam.workloadIdentityUser"
-  member  = "serviceAccount:${var.project_id}.svc.id.goog[${var.argocd_namespace}/argocd-application-controller]"
-  project = var.project_id
-}
+# # Add workload identity user
+# resource "google_project_iam_member" "argocd_application_controller_workload_identity_role" {
+#   role    = "roles/iam.workloadIdentityUser"
+#   member  = "serviceAccount:${var.project_id}.svc.id.goog[${var.argocd_namespace}/argocd-application-controller]"
+#   project = var.project_id
+# }
 
-resource "google_project_iam_member" "argocd_server_workload_identity_role" {
-  role    = "roles/iam.workloadIdentityUser"
-  member  = "serviceAccount:${var.project_id}.svc.id.goog[${var.argocd_namespace}/argocd-server]"
-  project = var.project_id
-}
+# resource "google_project_iam_member" "argocd_server_workload_identity_role" {
+#   role    = "roles/iam.workloadIdentityUser"
+#   member  = "serviceAccount:${var.project_id}.svc.id.goog[${var.argocd_namespace}/argocd-server]"
+#   project = var.project_id
+# }
 
 # resource "kubernetes_manifest" "argocd_application_controller_sa_annotation" {
 #   manifest = {
