@@ -20,3 +20,11 @@ module "nginx-controller" {
   ip_address = google_compute_address.ingress[0].address
 
 }
+
+resource "helm_release" "sealed_secrets" {
+  count            = var.install_sealed_secrets ? 1 : 0
+  name             = "sealed-secrets"
+  repository       = "https://github.com/bitnami-labs/sealed-secrets/tree/main/helm/sealed-secrets"
+  chart            = "sealed-secrets"
+  create_namespace = true
+}

@@ -32,3 +32,8 @@ variable "app_namespace" {
   type    = string
   default = "app-namespace"
 }
+
+variable "install_sealed_secrets" {
+  type = bool
+  default = false
+}
