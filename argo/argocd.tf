@@ -10,24 +10,27 @@ resource "helm_release" "argocd" {
   chart            = "argo-cd"
   create_namespace = true
   namespace        = var.argocd_namespace
-  set {
-    name  = "configs.secret.argocdServerAdminPassword"
-    value = htpasswd_password.hash.bcrypt
-  }
-  set {
-    name  = "configs.params.server.insecure"
-    value = false
-  }
 
-  set {
-    name  = "server.ingress.enabled"
-    value = true
-  }
-
-  set {
-    name  = "server.ingress.ingressClassName"
-    value = "nginx"
-  }
+  values = [
+    yamlencode({
+      configs = {
+        secret = {
+          argocdServerAdminPassword = htpasswd_password.hash.bcrypt
+        }
+        params = {
+          server = {
+            insecure = false
+          }
+        }
+      }
+      server = {
+        ingress = {
+          enabled          = true
+          ingressClassName = "nginx"
+        }
+      }
+    })
+  ]
 }
 
 resource "kubernetes_ingress_v1" "this" {
